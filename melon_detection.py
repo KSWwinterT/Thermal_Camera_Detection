@@ -8,13 +8,14 @@ import torch
 from ultralytics import YOLO
 import pandas as pd
 
-# YOLOv8 ?? ??? ??? ??? ??
+# get YOLOv8 model
 yolo_weights_path = 'yolov8n.pt'
 
-# YOLOv8 ?? ???
+# apply
 model = YOLO(yolo_weights_path)
 
 
+# check the pi open
 def is_raspberrypi():
     try:
         with io.open('/sys/firmware/devicetree/base/model', 'r') as m:
@@ -25,6 +26,7 @@ def is_raspberrypi():
 
 isPi = is_raspberrypi()
 
+# check the camera connection
 parser = argparse.ArgumentParser()
 parser.add_argument("--device", type=int, default=0, help="Video Device number e.g. 0, use v4l2-ctl --list-devices")
 args = parser.parse_args()
@@ -58,7 +60,8 @@ rad = 0  # blur radius
 
 flag = 1
 
-#while(cap.isOpened()):
+# detection
+# while(cap.isOpened()):
 while(flag):
     # Capture frame-by-frame
     ret, frame = cap.read()
@@ -82,9 +85,6 @@ while(flag):
         # Apply colormap
         if colormap == 0:
             heatmap = cv2.applyColorMap(bgr, cv2.COLORMAP_JET)
-        # (이하 중략)
-        # ... (이하 생략)
-        # ...
 
         # Draw crosshairs
         cv2.line(heatmap, (int(newWidth/2), int(newHeight/2)+20),
@@ -104,9 +104,9 @@ while(flag):
                     cv2.FONT_HERSHEY_SIMPLEX, 0.45, (0, 255, 255), 1, cv2.LINE_AA)
 
         # print(frame.shape)
-        # flag = 0
+        flag = 0
         
-        # YOLOv8? ???? ?? ??
+        # YOLOv8 detection
         results = model(bgr)
         print(results)
         
@@ -119,18 +119,18 @@ while(flag):
                 label = int(result[5])
                 xmin, ymin, xmax, ymax = map(int, result[:4])
                 
-                # ??? ??? ?? ? ??? ??
+                # box
                 cv2.rectangle(frame, (xmin, ymin), (xmax, ymax), (0, 255, 0), 2)
                 cv2.putText(frame, f'Class: {label}, Conf: {conf:.2f}', (xmin, ymin - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
                 
         # Display image
         cv2.imshow('Thermal', heatmap)
 
-        # 종료 키
+        # check the close key event
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
 
-# 종료
+# close
 cap.release()
 print(frame.shape)
 cv2.destroyAllWindows()
