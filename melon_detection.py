@@ -107,13 +107,28 @@ while(flag):
         flag = 0
         
         # YOLOv8 detection
+
+        #print(type(model(bgr)))
         results = model(bgr)
+        print("-------")
         print(results)
+        #print(results[boxes])
+
+        print("results")
+        for result in results:
+            if "boxes" in result:
+                print(result["boxes"])
+
         
         results = pd.DataFrame(results)
 
-		# for result in results["boxes"].xyxy[0].cpu().numpy():
-        for result in results["orig_img"].xyxy[0].cpu().numpy():
+        print("-------")
+        print(results.columns)
+        print("-------")
+
+
+        # for result in results["orig_img"].xyxy[0].cpu().numpy():
+        for result in results["boxes"].xyxy[0].cpu().numpy():
             conf = result[4]
             if conf > 0.6:
                 label = int(result[5])
@@ -122,7 +137,7 @@ while(flag):
                 # box
                 cv2.rectangle(frame, (xmin, ymin), (xmax, ymax), (0, 255, 0), 2)
                 cv2.putText(frame, f'Class: {label}, Conf: {conf:.2f}', (xmin, ymin - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
-                
+        
         # Display image
         cv2.imshow('Thermal', heatmap)
 
@@ -132,7 +147,7 @@ while(flag):
 
 # close
 cap.release()
-print(frame.shape)
+# print(frame.shape)
 cv2.destroyAllWindows()
 
 
