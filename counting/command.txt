@@ -1,0 +1,13 @@
+git fetch origin
+git checkout <branch>
+
+# make nenv
+python3 -m venv <name>
+
+# activate
+source <name>/bin/activate
+
+# install ultraytics
+
+# deactive
+deactivate
