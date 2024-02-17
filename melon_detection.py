@@ -87,15 +87,27 @@ while(flag):
             heatmap = cv2.applyColorMap(bgr, cv2.COLORMAP_JET)
 
         # Draw crosshairs
-        cv2.line(heatmap, (int(newWidth/2), int(newHeight/2)+20),
-                 (int(newWidth/2), int(newHeight/2)-20), (255, 255, 255), 2)  # vline
-        cv2.line(heatmap, (int(newWidth/2)+20, int(newHeight/2)),
-                 (int(newWidth/2)-20, int(newHeight/2)), (255, 255, 255), 2)  # hline
+        cv2.line(heatmap, 
+                 (int(newWidth/2), int(newHeight/2)+20),
+                 (int(newWidth/2), int(newHeight/2)-20), 
+                 (255, 255, 255), 
+                 2)  # vline
+        cv2.line(heatmap, 
+                 (int(newWidth/2)+20, int(newHeight/2)),
+                 (int(newWidth/2)-20, int(newHeight/2)), 
+                 (255, 255, 255),
+                 2)  # hline
 
-        cv2.line(heatmap, (int(newWidth/2), int(newHeight/2)+20),
-                 (int(newWidth/2), int(newHeight/2)-20), (0, 0, 0), 1)  # vline
-        cv2.line(heatmap, (int(newWidth/2)+20, int(newHeight/2)),
-                 (int(newWidth/2)-20, int(newHeight/2)), (0, 0, 0), 1)  # hline
+        cv2.line(heatmap, 
+                 (int(newWidth/2), int(newHeight/2)+20),
+                 (int(newWidth/2), int(newHeight/2)-20), 
+                 (0, 0, 0),
+                1)  # vline
+        cv2.line(heatmap,
+                  (int(newWidth/2)+20, int(newHeight/2)),
+                 (int(newWidth/2)-20, int(newHeight/2)),
+                   (0, 0, 0), 
+                   1)  # hline
 
         # Show temp
         cv2.putText(heatmap, str(temp)+' C', (int(newWidth/2)+10, int(newHeight/2)-10),
@@ -110,21 +122,21 @@ while(flag):
         results = model(bgr)
         print(results)
         
-        results = pd.DataFrame(results)
+        # results = pd.DataFrame(results)
 
 		# for result in results["boxes"].xyxy[0].cpu().numpy():
-        for result in results["orig_img"].xyxy[0].cpu().numpy():
-            conf = result[4]
-            if conf > 0.6:
-                label = int(result[5])
-                xmin, ymin, xmax, ymax = map(int, result[:4])
+        # for result in results["boxes"].xyxy[0].cpu().numpy():
+        #     conf = result[4]
+        #     if conf > 0.6:
+        #         label = int(result[5])
+        #         xmin, ymin, xmax, ymax = map(int, result[:4])
                 
-                # box
-                cv2.rectangle(frame, (xmin, ymin), (xmax, ymax), (0, 255, 0), 2)
-                cv2.putText(frame, f'Class: {label}, Conf: {conf:.2f}', (xmin, ymin - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
-                
+        #         # box
+        #         cv2.rectangle(frame, (xmin, ymin), (xmax, ymax), (0, 255, 0), 2)
+        #         cv2.putText(frame, f'Class: {label}, Conf: {conf:.2f}', (xmin, ymin - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
+           
         # Display image
-        cv2.imshow('Thermal', heatmap)
+        # cv2.imshow('Thermal', heatmap)
 
         # check the close key event
         if cv2.waitKey(1) & 0xFF == ord('q'):
