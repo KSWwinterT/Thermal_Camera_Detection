@@ -1,21 +1,24 @@
+
 #!/usr/bin/env python3
+'''
+Les Wright 21 June 2023
+https://youtube.com/leslaboratory
+A Python program to read, parse, and display thermal data from the Topdon TC001 Thermal camera!
+'''
+print('Les Wright 21 June 2023')
+print('https://youtube.com/leslaboratory')
+print('A Python program to read, parse, and display thermal data from the Topdon TC001 Thermal camera!')
+print('')
+print('Tested on Debian all features are working correctly')
+print('This will work on the Pi; however, a number of workarounds are implemented!')
+print('Seemingly there are bugs in the compiled version of cv2 that ships with the Pi!')
+print('')
 
 import cv2
 import numpy as np
 import argparse
 import io
-import torch
-from ultralytics import YOLO
-import pandas as pd
 
-# get YOLOv8 model
-yolo_weights_path = 'yolov8n.pt'
-
-# apply
-model = YOLO(yolo_weights_path)
-
-
-# check the pi open
 def is_raspberrypi():
     try:
         with io.open('/sys/firmware/devicetree/base/model', 'r') as m:
@@ -26,7 +29,6 @@ def is_raspberrypi():
 
 isPi = is_raspberrypi()
 
-# check the camera connection
 parser = argparse.ArgumentParser()
 parser.add_argument("--device", type=int, default=0, help="Video Device number e.g. 0, use v4l2-ctl --list-devices")
 args = parser.parse_args()
@@ -58,11 +60,7 @@ cv2.namedWindow('Thermal', cv2.WINDOW_GUI_NORMAL)
 cv2.resizeWindow('Thermal', newWidth, newHeight)
 rad = 0  # blur radius
 
-flag = 1
-
-# detection
-# while(cap.isOpened()):
-while(flag):
+while(cap.isOpened()):
     # Capture frame-by-frame
     ret, frame = cap.read()
     if ret == True:
@@ -85,29 +83,20 @@ while(flag):
         # Apply colormap
         if colormap == 0:
             heatmap = cv2.applyColorMap(bgr, cv2.COLORMAP_JET)
+        # (이하 중략)
+        # ... (이하 생략)
+        # ...
 
         # Draw crosshairs
-        cv2.line(heatmap, 
-                 (int(newWidth/2), int(newHeight/2)+20),
-                 (int(newWidth/2), int(newHeight/2)-20), 
-                 (255, 255, 255), 
-                 2)  # vline
-        cv2.line(heatmap, 
-                 (int(newWidth/2)+20, int(newHeight/2)),
-                 (int(newWidth/2)-20, int(newHeight/2)), 
-                 (255, 255, 255),
-                 2)  # hline
+        cv2.line(heatmap, (int(newWidth/2), int(newHeight/2)+20),
+                 (int(newWidth/2), int(newHeight/2)-20), (255, 255, 255), 2)  # vline
+        cv2.line(heatmap, (int(newWidth/2)+20, int(newHeight/2)),
+                 (int(newWidth/2)-20, int(newHeight/2)), (255, 255, 255), 2)  # hline
 
-        cv2.line(heatmap, 
-                 (int(newWidth/2), int(newHeight/2)+20),
-                 (int(newWidth/2), int(newHeight/2)-20), 
-                 (0, 0, 0),
-                1)  # vline
-        cv2.line(heatmap,
-                  (int(newWidth/2)+20, int(newHeight/2)),
-                 (int(newWidth/2)-20, int(newHeight/2)),
-                   (0, 0, 0), 
-                   1)  # hline
+        cv2.line(heatmap, (int(newWidth/2), int(newHeight/2)+20),
+                 (int(newWidth/2), int(newHeight/2)-20), (0, 0, 0), 1)  # vline
+        cv2.line(heatmap, (int(newWidth/2)+20, int(newHeight/2)),
+                 (int(newWidth/2)-20, int(newHeight/2)), (0, 0, 0), 1)  # hline
 
         # Show temp
         cv2.putText(heatmap, str(temp)+' C', (int(newWidth/2)+10, int(newHeight/2)-10),
@@ -115,36 +104,13 @@ while(flag):
         cv2.putText(heatmap, str(temp)+' C', (int(newWidth/2)+10, int(newHeight/2)-10),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.45, (0, 255, 255), 1, cv2.LINE_AA)
 
-        # print(frame.shape)
-        flag = 0
-        
-        # YOLOv8 detection
-        results = model(bgr)
-        print(results)
-        
-        # results = pd.DataFrame(results)
-
-		# for result in results["boxes"].xyxy[0].cpu().numpy():
-        # for result in results["boxes"].xyxy[0].cpu().numpy():
-        #     conf = result[4]
-        #     if conf > 0.6:
-        #         label = int(result[5])
-        #         xmin, ymin, xmax, ymax = map(int, result[:4])
-                
-        #         # box
-        #         cv2.rectangle(frame, (xmin, ymin), (xmax, ymax), (0, 255, 0), 2)
-        #         cv2.putText(frame, f'Class: {label}, Conf: {conf:.2f}', (xmin, ymin - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
-           
         # Display image
-        # cv2.imshow('Thermal', heatmap)
+        cv2.imshow('Thermal', heatmap)
 
-        # check the close key event
+        # 종료 키
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
 
-# close
+# 종료
 cap.release()
-print(frame.shape)
 cv2.destroyAllWindows()
-
-
