@@ -1,0 +1,18 @@
+# install
+sudo apt-get install python3-opencv
+
+# camera check
+v4l2-ctl --list-devices
+
+# run
+python3 tc001-<filename>.py --device 0<devicenum>
+
+# key binding
+a z: Increase/Decrease Blur
+s x: Floating High and Low Temp Label Threshold'
+d c: Change Interpolated scale.(Note: This will not change the window size on the Pi!)
+f v: Contrast
+q w: Fullscreen Windowed. (Note: Going back to windowed does not seem to work on the Pi!)
+r t: Record and Stop
+m : Cycle through ColorMaps
+h : Toggle HUD
