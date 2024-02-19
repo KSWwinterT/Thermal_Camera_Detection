@@ -12,6 +12,8 @@ region_points = [(20, 400), (1080, 404), (1080, 360), (20, 360)]
 
 # Video writer -> object_counting_output.avi
 # /Users/koeunseo/Documents/2023-2/K-SW square/project/Thermal_Camera_Detection/photo/IMG_7718.MOV
+# mov, avc1
+# avi, XVID
 video_writer = cv2.VideoWriter("./counting/test2.mov",
                        cv2.VideoWriter_fourcc(*'avc1'),
                        fps,
