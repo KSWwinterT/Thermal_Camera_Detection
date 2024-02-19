@@ -123,19 +123,19 @@ while(flag):
         # YOLOv8 detection
         # print(results)
         
-        print(dir(results))
+        # print(dir(results))
         # results = pd.DataFrame(results)
+        # print(results.shape)
 
-		# for result in results["boxes"].xyxy[0].cpu().numpy():
         # for result in results["boxes"].xyxy[0].cpu().numpy():
-        #     conf = result[4]
-        #     if conf > 0.6:
-        #         label = int(result[5])
-        #         xmin, ymin, xmax, ymax = map(int, result[:4])
+    for result in results["boxes"]:
+        if conf > 0.6:
+                label = int(result[5])
+                xmin, ymin, xmax, ymax = map(int, result[:4])
                 
-        #         # box
-        #         cv2.rectangle(frame, (xmin, ymin), (xmax, ymax), (0, 255, 0), 2)
-        #         cv2.putText(frame, f'Class: {label}, Conf: {conf:.2f}', (xmin, ymin - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
+                # box
+                cv2.rectangle(frame, (xmin, ymin), (xmax, ymax), (0, 255, 0), 2)
+                cv2.putText(frame, f'Class: {label}, Conf: {conf:.2f}', (xmin, ymin - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
            
         # Display image
         # cv2.imshow('Thermal', heatmap)
