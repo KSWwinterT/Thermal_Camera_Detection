@@ -72,7 +72,7 @@ def snapshot(heatmap):
 	cv2.imwrite("TC001"+now+".png", heatmap)
 	return snaptime
  
-
+count = 0
 while(cap.isOpened()):
 	# Capture frame-by-frame
 	ret, frame = cap.read()
@@ -139,8 +139,36 @@ while(cap.isOpened()):
 		heatmap = cv2.applyColorMap(bgr, cv2.COLORMAP_JET)
 
 		# yolo detection
-		tracks = model.track(heatmap, persist=True, show=False)
+		results = model.track(heatmap, persist=True, show=False)
 
+		print(results[0].boxes)
+
+		'''# detecting 1
+		if results[0].boxes is not None:
+			# Extract IDs if they exist
+			ids = results[0].boxes.id.cpu().numpy().astype(int) if results[0].boxes.id is not None else []
+
+			# Annotate frame with boxes and IDs
+			if len(ids) > 0:
+				for i, box in enumerate(results[0].boxes.xyxy.cpu().numpy().astype(int)):
+					id = ids[i] if ids else None
+					cv2.rectangle(heatmap, (box[0], box[1]), (box[2], box[3]), (0, 255, 0), 2)
+					if id is not None:
+						cv2.putText(heatmap, f"ID {id}", (box[0], box[1] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)
+		else:
+			print("none")'''
+		
+		# detecting 2
+		if hasattr(results[0].boxes, 'id') and results[0].boxes.id is not None:
+			boxes = results[0].boxes.xyxy.cpu().numpy().astype(int)
+			ids = results[0].boxes.id.cpu().numpy().astype(int)
+
+			# Draw boxes and IDs on the frames
+			for box, id in zip(boxes, ids):
+				cv2.rectangle(heatmap, (box[0], box[1]), (box[2], box[3]), (0, 255, 0), 2)
+				cv2.putText(heatmap, f"Id {id}", (box[0], box[1]), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+		else:
+			print("Tracking IDs not available.")
 
 		#display image
 		cv2.imshow('Thermal',heatmap)
