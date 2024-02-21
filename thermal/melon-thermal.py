@@ -138,10 +138,10 @@ while(cap.isOpened()):
 			
 		heatmap = cv2.applyColorMap(bgr, cv2.COLORMAP_JET)
 
-		# yolo detection
-		results = model.track(heatmap, persist=True, show=False)
-
-		print(results[0].boxes)
+		if (count % 4 == 0):
+			# yolo detection
+			results = model.track(heatmap, persist=True, show=False)
+			print(results[0].boxes)
 
 		'''# detecting 1
 		if results[0].boxes is not None:
@@ -172,6 +172,9 @@ while(cap.isOpened()):
 
 		#display image
 		cv2.imshow('Thermal',heatmap)
+
+		#4-multiplier count
+		count += 1
 
 		if recording == True:
 			elapsed = (time.time() - start)
