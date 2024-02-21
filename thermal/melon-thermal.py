@@ -166,7 +166,7 @@ while(cap.isOpened()):
 			# Draw boxes and IDs on the frames
 			for box, id in zip(boxes, ids):
 				cv2.rectangle(heatmap, (box[0], box[1]), (box[2], box[3]), (0, 255, 0), 2)
-				cv2.putText(heatmap, f"Id {id}", (box[0], box[1]), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+				cv2.putText(heatmap, "person", (box[0], box[1]), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
 		else:
 			print("Tracking IDs not available.")
 
